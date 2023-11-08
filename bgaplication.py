@@ -5,6 +5,7 @@ import tkinter as tk
 import os
 import msgbox
 import bdconnect as bd
+import pygetwindow as gw
 
 #window
 window = Tk()
@@ -99,26 +100,26 @@ refresh_data()
 def kolor():
     time_boolen1, time_boolen2, time_boolen3 = bd.result_time()
 
+    tester_fail1, tester_fail2, tester_fail3 = False, False, False
+
     if time_boolen1 == False:
         image1 = Image.open("picture/Inline1Good.png")
     else:
         image1 = Image.open("picture/Inline1Bad.png")
-        if paused == False:
-            msgbox.warning_info1()
+        tester_fail1 = True
 
     if time_boolen2 == False:
         image2 = Image.open("picture/Inline2Good.png")
     else:
         image2 = Image.open("picture/Inline2Bad.png")
-        if paused == False:
-            msgbox.warning_info2()
+        tester_fail2 = True
 
     if time_boolen3 == False:
         image3 = Image.open("picture/Inline3Good.png")
+        tester_fail3 = True
     else:
         image3 = Image.open("picture/Inline3Bad.png")
-        if paused == False:
-            msgbox.warning_info3()
+        tester_fail3 = True
 
     photo1 = ImageTk.PhotoImage(image1)
     photo2 = ImageTk.PhotoImage(image2)
@@ -132,6 +133,15 @@ def kolor():
     label1.image = photo1
     label2.image = photo2
     label3.image = photo3
+
+    if paused == False and tester_fail1 == True:
+        msgbox.warning_info1()
+
+    if paused == False and tester_fail2 == True:
+        msgbox.warning_info2()
+
+    if paused == False and tester_fail3 == True:
+        msgbox.warning_info3()
 
     window.after(30000, kolor)
 

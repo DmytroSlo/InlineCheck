@@ -17,3 +17,7 @@ def warning_info2():
 def warning_info3():
     msg = "Sprawdz Inline 3!"
     mb.showwarning("Awaria!", msg)
+
+def bd_error():
+    msg = "Brak połączenia z bazą danych!"
+    mb.showerror("Baza danych", msg)

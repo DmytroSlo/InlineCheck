@@ -2,41 +2,48 @@ import datetime
 
 import mysql.connector as mc
 
+from msgbox import bd_error
+
+
 def get_data():
-    db = mc.connect(
-        host="localhost",
-        user="admin",
-        password="admin",
-        database="inlinelogs"
-    )
+    try:
+        db = mc.connect(
+            host="localhost",
+            user="admin",
+            password="admin",
+            database="inlinelogs"
+        )
 
-    cursor = db.cursor()
+        cursor = db.cursor()
 
-    query = """
-        SELECT name, MAX(time) as last_time
-        FROM logs
-        WHERE name IN ('INLINE 1', 'INLINE 2', 'INLINE 3')
-        GROUP BY name
-    """
-    cursor.execute(query)
+        query = """
+            SELECT name, MAX(time) as last_time
+            FROM logs
+            WHERE name IN ('INLINE 1', 'INLINE 2', 'INLINE 3')
+            GROUP BY name
+        """
+        cursor.execute(query)
 
-    results = cursor.fetchall()
+        results = cursor.fetchall()
 
-    time_value1, time_value2, time_value3 = None, None, None
+        time_value1, time_value2, time_value3 = None, None, None
 
-    for result in results:
-        name = result[0]
-        if name == "INLINE 1":
-            time_value1 = result[1]
-        elif name == "INLINE 2":
-            time_value2 = result[1]
-        elif name == "INLINE 3":
-            time_value3 = result[1]
+        for result in results:
+            name = result[0]
+            if name == "INLINE 1":
+                time_value1 = result[1]
+            elif name == "INLINE 2":
+                time_value2 = result[1]
+            elif name == "INLINE 3":
+                time_value3 = result[1]
 
-    cursor.close()
-    db.close()
+        cursor.close()
+        db.close()
 
-    return time_value1, time_value2, time_value3
+        return time_value1, time_value2, time_value3
+    except mc.Error as e:
+        bd_error()
+        return None, None, None
 
 def tenminutago():
     time_value1, time_value2, time_value3 = get_data()
