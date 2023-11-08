@@ -1,7 +1,9 @@
 from tkinter import messagebox as mb
 
 def show_info():
-    msg = "Sprawdz Inline 1"
+    msg = ("Wersja: 1.0.1\n"
+           "Autor: Dmytro Slobodian & Kamil Jankowski\n"
+           "Special for Kitron©")
     mb.showinfo("Info", msg)
 
 def warning_info1():

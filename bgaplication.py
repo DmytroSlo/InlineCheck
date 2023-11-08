@@ -34,12 +34,10 @@ paused = False
 def stop():
     global paused
     paused = True
-    print("stop")
 
 def start():
     global paused
     paused = False
-    print("start")
 
 #flaga
 r_var = BooleanVar()
@@ -48,7 +46,7 @@ r_var.set(0)
 #menu
 menu = Menu(window)
 new_info = Menu(menu, tearoff=0)
-new_info.add_command(label='Info')
+new_info.add_command(label='Info', command=msgbox.show_info)
 new_info.add_separator()
 new_info.add_command(label='Restart', command=refresh)
 new_info.add_separator()
