@@ -40,9 +40,13 @@ def start():
     global paused
     paused = False
 
-#flaga
+#flaga PAUSE\RESUNE
 r_var = BooleanVar()
 r_var.set(0)
+
+#flaga PRODUCT
+p_var = BooleanVar()
+p_var.set(0)
 
 #menu
 menu = Menu(window)
@@ -57,6 +61,15 @@ new_info.add_separator()
 
 menu.add_cascade(label = 'File', menu = new_info)
 window.config(menu = menu)
+
+product = Menu(window)
+new_product = Menu(menu, tearoff=0)
+new_product.add_radiobutton(label="P21 | 3 minut", variable=p_var, value=0, command=bd.timeP21)
+new_product.add_radiobutton(label="P0   | 5 minut", variable=p_var, value=1, command=bd.timeP0)
+new_product.add_radiobutton(label="P15 | 7 minut", variable=p_var, value=2, command=bd.timeP15)
+
+menu.add_cascade(label="Product", menu=new_product)
+window.config(menu=menu)
 
 def refresh_data():
     time_value1, time_value2, time_value3 = bd.get_data()
@@ -116,7 +129,7 @@ def kolor():
 
     if time_boolen3 == False:
         image3 = Image.open("picture/Inline3Good.png")
-        tester_fail3 = True
+        tester_fail3 = False
     else:
         image3 = Image.open("picture/Inline3Bad.png")
         tester_fail3 = True

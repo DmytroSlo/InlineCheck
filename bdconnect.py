@@ -45,6 +45,28 @@ def get_data():
         bd_error()
         return None, None, None
 
+p21 = True
+p15 = False
+p0 = False
+
+def timeP21():
+    global p21, p15, p0
+    p21 = True
+    p15 = False
+    p0 = False
+
+def timeP15():
+    global p21, p15, p0
+    p21 = False
+    p15 = True
+    p0 = False
+
+def timeP0():
+    global p21, p15, p0
+    p21 = False
+    p15 = False
+    p0 = True
+
 def tenminutago():
     time_value1, time_value2, time_value3 = get_data()
 
@@ -54,7 +76,14 @@ def tenminutago():
 
     if time_value1:
         time_difference = current_time - time_value1
-        time_result1 = time_difference.total_seconds() < 600
+        if p0 == True and p15 == False and p21 == False:
+            time_result1 = time_difference.total_seconds() < 300
+
+        if p0 == False and p15 == True and p21 == False:
+            time_result1 = time_difference.total_seconds() < 420
+
+        if p0 == False and p15 == False and p21 == True:
+            time_result1 = time_difference.total_seconds() < 420
 
     if time_value2:
         time_difference = current_time - time_value2
@@ -72,19 +101,16 @@ def result_time():
     time_boolen1, time_boolen2, time_boolen3 = False, False, False
 
     if time_result1:
-        print("Mniej niż 10")
         time_boolen1 = False
     else:
         time_boolen1 = True
 
     if time_result2:
-        print("Mniej niż 10")
         time_boolen2 = False
     else:
         time_boolen2 = True
 
     if time_result3:
-        print("Mniej niż 10")
         time_boolen3 = False
     else:
         time_boolen3 = True
