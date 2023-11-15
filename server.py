@@ -1,26 +1,26 @@
+import pymssql as mc
 import datetime
-
-import mysql.connector as mc
 
 from msgbox import bd_error
 
 
 def get_data():
     try:
-        db = mc.connect(
-            host="localhost",
-            user="admin",
-            password="admin",
-            database="inlinelogs"
-        )
+        db = mc.connect("kit-grd-sql01", "FLx_read", "Kitron2017+", "FactoryLogixPLp")
 
         cursor = db.cursor()
 
         query = """
-            SELECT name, MAX(time) as last_time
-            FROM logs
-            WHERE name IN ('INLINE 1', 'INLINE 2', 'INLINE 3')
-            GROUP BY name
+            SELECT TOP (20)
+            prt.Operator,
+            prt.TimeCompleted_BaseDateTimeUTC as 'LastTime'
+            FROM [FactoryLogixPLp].[dbo].[ItemInventories] ii
+            LEFT JOIN ProductRouteTransactions prt ON prt.ItemInventoryID = ii.id
+            RIGHT JOIN FactoryResourceBases frb ON frb.id = prt.WorkstationID
+            WHERE frb.name = 'Test 01' 
+            AND prt.TimeStarted_BaseDateTimeUTC >= ' '
+            AND prt.Operator IN ('HUSQV_INLINE1  (xLink)', 'HUSQV_INLINE2  (xLink)', 'HUSQV_INLINE3  (xLink)')
+            ORDER BY prt.TimeStarted_BaseDateTimeUTC DESC
         """
         cursor.execute(query)
 
@@ -30,11 +30,11 @@ def get_data():
 
         for result in results:
             name = result[0]
-            if name == "INLINE 1":
+            if name == "HUSQV_INLINE1  (xLink)":
                 time_value1 = result[1]
-            elif name == "INLINE 2":
+            elif name == "HUSQV_INLINE2  (xLink)":
                 time_value2 = result[1]
-            elif name == "INLINE 3":
+            elif name == "HUSQV_INLINE3  (xLink)":
                 time_value3 = result[1]
 
         cursor.close()
@@ -43,7 +43,7 @@ def get_data():
         return time_value1, time_value2, time_value3
     except mc.Error as e:
         bd_error()
-        return None, None, None
+        print(e)
 
 p21 = True
 p15 = False
@@ -76,6 +76,7 @@ def tenminutago():
 
     if time_value1:
         time_difference = current_time - time_value1
+
         if p0 == True and p15 == False and p21 == False:
             time_result1 = time_difference.total_seconds() < 300
 
@@ -83,15 +84,29 @@ def tenminutago():
             time_result1 = time_difference.total_seconds() < 420
 
         if p0 == False and p15 == False and p21 == True:
-            time_result1 = time_difference.total_seconds() < 420
+            time_result1 = time_difference.total_seconds() < 180
 
     if time_value2:
         time_difference = current_time - time_value2
-        time_result2 = time_difference.total_seconds() < 600
+        if p0 == True and p15 == False and p21 == False:
+            time_result2 = time_difference.total_seconds() < 300
+
+        if p0 == False and p15 == True and p21 == False:
+            time_result2 = time_difference.total_seconds() < 420
+
+        if p0 == False and p15 == False and p21 == True:
+            time_result2 = time_difference.total_seconds() < 180
 
     if time_value3:
         time_difference = current_time - time_value3
-        time_result3 = time_difference.total_seconds() < 600
+        if p0 == True and p15 == False and p21 == False:
+            time_result3 = time_difference.total_seconds() < 300
+
+        if p0 == False and p15 == True and p21 == False:
+            time_result3 = time_difference.total_seconds() < 420
+
+        if p0 == False and p15 == False and p21 == True:
+            time_result3 = time_difference.total_seconds() < 180
 
     return time_result1, time_result2, time_result3
 

@@ -4,8 +4,9 @@ from PIL import Image, ImageTk
 import tkinter as tk
 import os
 import msgbox
-import bdconnect as bd
-import pygetwindow as gw
+import server as bd
+
+import server
 
 #window
 window = Tk()
@@ -82,7 +83,7 @@ def refresh_data():
     bd.result_time()
 
     # Planuj ponowne wywołanie funkcji po np. 10 sekundach
-    window.after(30000, refresh_data)
+    window.after(60000, refresh_data)
 
 #wpisy ostatniego testu
 lastTest1 = Label(frame_add_data, text = "Ostatni test:", font=("Sylfaen", 10))
@@ -172,5 +173,7 @@ label3.pack()
 label3.place(x=280, y=0)
 
 kolor()
+
+server.get_data()
 
 window.mainloop()
