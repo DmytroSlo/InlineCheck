@@ -2,7 +2,6 @@ from tkinter import *
 from PIL import Image, ImageTk
 
 import tkinter as tk
-import os
 import msgbox
 import server as bd
 
@@ -20,11 +19,6 @@ frame_add_data = tk.Frame(window, width=400, height=80)
 
 frame_add_info.pack()
 frame_add_data.pack()
-
-#refresh
-def refresh():
-    window.destroy()
-    os.popen("bgaplication.py")
 
 #Blokowanie okna
 def block():
@@ -54,8 +48,6 @@ menu = Menu(window)
 new_info = Menu(menu, tearoff=0)
 new_info.add_command(label='Info', command=msgbox.show_info)
 new_info.add_separator()
-new_info.add_command(label='Restart', command=refresh)
-new_info.add_separator()
 new_info.add_radiobutton(label='Pause', variable=r_var, value=1, command=stop)
 new_info.add_radiobutton(label='Resume', variable=r_var, value=0, command=start)
 new_info.add_separator()
@@ -68,6 +60,7 @@ new_product = Menu(menu, tearoff=0)
 new_product.add_radiobutton(label="P21 | 3 minut", variable=p_var, value=0, command=bd.timeP21)
 new_product.add_radiobutton(label="P0   | 5 minut", variable=p_var, value=1, command=bd.timeP0)
 new_product.add_radiobutton(label="P15 | 7 minut", variable=p_var, value=2, command=bd.timeP15)
+new_product.add_separator()
 
 menu.add_cascade(label="Product", menu=new_product)
 window.config(menu=menu)
@@ -157,7 +150,7 @@ def kolor():
     if paused == False and tester_fail3 == True:
         msgbox.warning_info3()
 
-    window.after(30000, kolor)
+    window.after(60000, kolor)
 
 # Utwórz etykiety, ale bez przypisanych obrazów, które zostaną ustawione w funkcji kolor()
 label1 = tk.Label(frame_add_info)

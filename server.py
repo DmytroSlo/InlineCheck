@@ -10,8 +10,8 @@ def get_data():
 
         cursor = db.cursor()
 
-        query = """
-            SELECT TOP (20)
+        query1 = """
+            SELECT TOP (1)
             prt.Operator,
             prt.TimeCompleted_BaseDateTimeUTC as 'LastTime'
             FROM [FactoryLogixPLp].[dbo].[ItemInventories] ii
@@ -19,23 +19,67 @@ def get_data():
             RIGHT JOIN FactoryResourceBases frb ON frb.id = prt.WorkstationID
             WHERE frb.name = 'Test 01' 
             AND prt.TimeStarted_BaseDateTimeUTC >= ' '
-            AND prt.Operator IN ('HUSQV_INLINE1  (xLink)', 'HUSQV_INLINE2  (xLink)', 'HUSQV_INLINE3  (xLink)')
+            AND prt.Operator IN ('HUSQV_INLINE1  (xLink)')
             ORDER BY prt.TimeStarted_BaseDateTimeUTC DESC
         """
-        cursor.execute(query)
+        cursor.execute(query1)
 
         results = cursor.fetchall()
+
+        query2 = """
+            SELECT TOP (1)
+            prt.Operator,
+            prt.TimeCompleted_BaseDateTimeUTC as 'LastTime'
+            FROM [FactoryLogixPLp].[dbo].[ItemInventories] ii
+            LEFT JOIN ProductRouteTransactions prt ON prt.ItemInventoryID = ii.id
+            RIGHT JOIN FactoryResourceBases frb ON frb.id = prt.WorkstationID
+            WHERE frb.name = 'Test 01' 
+            AND prt.TimeStarted_BaseDateTimeUTC >= ' '
+            AND prt.Operator IN ('HUSQV_INLINE2  (xLink)')
+            ORDER BY prt.TimeStarted_BaseDateTimeUTC DESC
+        """
+        cursor.execute(query2)
+
+        results2 = cursor.fetchall()
+
+        query3 = """
+            SELECT TOP (1)
+            prt.Operator,
+            prt.TimeCompleted_BaseDateTimeUTC as 'LastTime'
+            FROM [FactoryLogixPLp].[dbo].[ItemInventories] ii
+            LEFT JOIN ProductRouteTransactions prt ON prt.ItemInventoryID = ii.id
+            RIGHT JOIN FactoryResourceBases frb ON frb.id = prt.WorkstationID
+            WHERE frb.name = 'Test 01' 
+            AND prt.TimeStarted_BaseDateTimeUTC >= ' '
+            AND prt.Operator IN ('HUSQV_INLINE3  (xLink)')
+            ORDER BY prt.TimeStarted_BaseDateTimeUTC DESC
+        """
+        cursor.execute(query3)
+
+        results3 = cursor.fetchall()
 
         time_value1, time_value2, time_value3 = None, None, None
 
         for result in results:
-            name = result[0]
-            if name == "HUSQV_INLINE1  (xLink)":
-                time_value1 = result[1]
-            elif name == "HUSQV_INLINE2  (xLink)":
-                time_value2 = result[1]
-            elif name == "HUSQV_INLINE3  (xLink)":
-                time_value3 = result[1]
+            time_value1 = result[1]
+
+        for result2 in results2:
+            time_value2 = result2[1]
+
+        for result3 in results3:
+            time_value3 = result3[1]
+
+        current_time = datetime.datetime.now()
+
+        time_differenc = current_time - time_value1
+
+        if time_differenc.total_seconds() >= 3600:
+            if time_value1:
+                time_value1 = time_value1 + datetime.timedelta(hours=1)
+            if time_value2:
+                time_value2 = time_value2 + datetime.timedelta(hours=1)
+            if time_value3:
+                time_value3 = time_value3 + datetime.timedelta(hours=1)
 
         cursor.close()
         db.close()
