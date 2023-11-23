@@ -26,22 +26,6 @@ def block():
     window.attributes("-topmost", True)
 block()
 
-paused = False
-
-#Do usunięcia
-
-# def stop():
-#     global paused
-#     paused = True
-#
-# def start():
-#     global paused
-#     paused = False
-
-# #flaga PAUSE\RESUNE
-# r_var = BooleanVar()
-# r_var.set(0)
-
 #flaga PRODUCT
 p_var = BooleanVar()
 p_var.set(0)
@@ -51,10 +35,6 @@ menu = Menu(window)
 new_info = Menu(menu, tearoff=0)
 new_info.add_command(label='Info', command=msgbox.show_info)
 new_info.add_separator()
-#Do usunięcia
-# new_info.add_radiobutton(label='Pause', variable=r_var, value=1, command=stop)
-# new_info.add_radiobutton(label='Resume', variable=r_var, value=0, command=start)
-# new_info.add_separator()
 
 menu.add_cascade(label = 'File', menu = new_info)
 window.config(menu = menu)
@@ -70,14 +50,18 @@ menu.add_cascade(label="Product", menu=new_product)
 window.config(menu=menu)
 
 def refresh_data():
-    time_value1, time_value2, time_value3 = bd.get_data()
+    local_time1, local_time2, local_time3 = bd.get_data()
+
+    local_time1_label = local_time1.strftime("%Y-%m-%d %H:%M:%S")
+    local_time2_label = local_time2.strftime("%Y-%m-%d %H:%M:%S")
+    local_time3_label = local_time3.strftime("%Y-%m-%d %H:%M:%S")
 
     # Zaktualizuj etykiety w oknie Tkinter z nowymi danymi
-    lastTest1SQL.config(text=time_value1)
-    lastTest2SQL.config(text=time_value2)
-    lastTest3SQL.config(text=time_value3)
+    lastTest1SQL.config(text=local_time1_label)
+    lastTest2SQL.config(text=local_time2_label)
+    lastTest3SQL.config(text=local_time3_label)
     bd.tenminutago()
-    bd.result_time()
+    # bd.result_time()
 
     # Planuj ponowne wywołanie funkcji po np. 10 sekundach
     window.after(60000, refresh_data)
@@ -173,38 +157,37 @@ def pause3():
 button3_checked = IntVar()
 
 def kolor():
-    time_boolen1, time_boolen2, time_boolen3 = bd.result_time()
-
+    time_result1, time_result2, time_result3 = bd.tenminutago()
     tester_fail1, tester_fail2, tester_fail3 = False, False, False
 
     if marker1 == True:
         image1 = Image.open("picture/Inline1Pause.png")
 
-    if time_boolen1 == False and marker1 == False:
+    if time_result1 == True and marker1 == False:
         image1 = Image.open("picture/Inline1Good.png")
 
-    if time_boolen1 == True and marker1 == False:
+    if time_result1 == False and marker1 == False:
         image1 = Image.open("picture/Inline1Bad.png")
         tester_fail1 = True
 
     if marker2 == True:
         image2 = Image.open("picture/Inline2Pause.png")
 
-    if time_boolen2 == False and marker2 == False:
+    if time_result2 == True and marker2 == False:
         image2 = Image.open("picture/Inline2Good.png")
 
-    if time_boolen2 == True and marker2 == False:
+    if time_result2 == False and marker2 == False:
         image2 = Image.open("picture/Inline2Bad.png")
         tester_fail2 = True
 
     if marker3 == True:
         image3 = Image.open("picture/Inline3Pause.png")
 
-    if time_boolen3 == False and marker3 == False:
+    if time_result3 == True and marker3 == False:
         image3 = Image.open("picture/Inline3Good.png")
         tester_fail3 = False
 
-    if time_boolen3 == True and marker3 == False:
+    if time_result3 == False and marker3 == False:
         image3 = Image.open("picture/Inline3Bad.png")
         tester_fail3 = True
 
