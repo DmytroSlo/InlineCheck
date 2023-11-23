@@ -12,6 +12,7 @@ window = Tk()
 window.title("Inline Check Error")
 window.geometry("400x180")
 window.resizable(width=False, height=False)
+window.iconbitmap(r"picture/logo.ico")
 
 #block
 frame_add_info = tk.Frame(window, width=400, height=105)
@@ -27,17 +28,19 @@ block()
 
 paused = False
 
-def stop():
-    global paused
-    paused = True
+#Do usunięcia
 
-def start():
-    global paused
-    paused = False
+# def stop():
+#     global paused
+#     paused = True
+#
+# def start():
+#     global paused
+#     paused = False
 
-#flaga PAUSE\RESUNE
-r_var = BooleanVar()
-r_var.set(0)
+# #flaga PAUSE\RESUNE
+# r_var = BooleanVar()
+# r_var.set(0)
 
 #flaga PRODUCT
 p_var = BooleanVar()
@@ -48,9 +51,10 @@ menu = Menu(window)
 new_info = Menu(menu, tearoff=0)
 new_info.add_command(label='Info', command=msgbox.show_info)
 new_info.add_separator()
-new_info.add_radiobutton(label='Pause', variable=r_var, value=1, command=stop)
-new_info.add_radiobutton(label='Resume', variable=r_var, value=0, command=start)
-new_info.add_separator()
+#Do usunięcia
+# new_info.add_radiobutton(label='Pause', variable=r_var, value=1, command=stop)
+# new_info.add_radiobutton(label='Resume', variable=r_var, value=0, command=start)
+# new_info.add_separator()
 
 menu.add_cascade(label = 'File', menu = new_info)
 window.config(menu = menu)
@@ -104,27 +108,103 @@ lastTest3SQL.pack()
 lastTest3SQL.place(x=270, y=30)
 refresh_data()
 
+marker1 = False
+marker2 = False
+marker3 = False
+
+#Pausa Inline 1
+def pause1():
+    global marker1
+    if button1_checked.get():
+        button1_checked.set(0)
+        marker1 = False
+        image_pause = Image.open("picture/Inline1Good.png")
+        photo_pause = ImageTk.PhotoImage(image_pause)
+        button1.config(image=photo_pause)
+        button1.image = photo_pause
+    else:
+        button1_checked.set(1)
+        marker1 = True
+        image_pause = Image.open("picture/Inline1Pause.png")
+        photo_pause = ImageTk.PhotoImage(image_pause)
+        button1.config(image=photo_pause)
+        button1.image = photo_pause
+
+button1_checked = IntVar()
+
+#Pausa Inline 2
+def pause2():
+    global marker2
+    if button2_checked.get():
+        button2_checked.set(0)
+        marker2 = False
+        image_pause = Image.open("picture/Inline2Good.png")
+        photo_pause = ImageTk.PhotoImage(image_pause)
+        button2.config(image=photo_pause)
+        button2.image = photo_pause
+    else:
+        button2_checked.set(1)
+        marker2 = True
+        image_pause = Image.open("picture/Inline2Pause.png")
+        photo_pause = ImageTk.PhotoImage(image_pause)
+        button2.config(image=photo_pause)
+        button2.image = photo_pause
+
+button2_checked = IntVar()
+
+#Pausa Inline 3
+def pause3():
+    global marker3
+    if button3_checked.get():
+        button3_checked.set(0)
+        marker3 = False
+        image_pause = Image.open("picture/Inline3Good.png")
+        photo_pause = ImageTk.PhotoImage(image_pause)
+        button3.config(image=photo_pause)
+        button3.image = photo_pause
+    else:
+        button3_checked.set(1)
+        marker3 = True
+        image_pause = Image.open("picture/Inline3Pause.png")
+        photo_pause = ImageTk.PhotoImage(image_pause)
+        button3.config(image=photo_pause)
+        button3.image = photo_pause
+
+button3_checked = IntVar()
+
 def kolor():
     time_boolen1, time_boolen2, time_boolen3 = bd.result_time()
 
     tester_fail1, tester_fail2, tester_fail3 = False, False, False
 
-    if time_boolen1 == False:
+    if marker1 == True:
+        image1 = Image.open("picture/Inline1Pause.png")
+
+    if time_boolen1 == False and marker1 == False:
         image1 = Image.open("picture/Inline1Good.png")
-    else:
+
+    if time_boolen1 == True and marker1 == False:
         image1 = Image.open("picture/Inline1Bad.png")
         tester_fail1 = True
 
-    if time_boolen2 == False:
+    if marker2 == True:
+        image2 = Image.open("picture/Inline2Pause.png")
+
+    if time_boolen2 == False and marker2 == False:
         image2 = Image.open("picture/Inline2Good.png")
-    else:
+
+    if time_boolen2 == True and marker2 == False:
         image2 = Image.open("picture/Inline2Bad.png")
         tester_fail2 = True
 
-    if time_boolen3 == False:
+    if marker3 == True:
+        image3 = Image.open("picture/Inline3Pause.png")
+
+    if time_boolen3 == False and marker3 == False:
         image3 = Image.open("picture/Inline3Good.png")
         tester_fail3 = False
-    else:
+
+    if time_boolen3 == True and marker3 == False:
         image3 = Image.open("picture/Inline3Bad.png")
         tester_fail3 = True
 
@@ -132,38 +212,38 @@ def kolor():
     photo2 = ImageTk.PhotoImage(image2)
     photo3 = ImageTk.PhotoImage(image3)
 
-    label1.config(image=photo1)
-    label2.config(image=photo2)
-    label3.config(image=photo3)
+    button1.config(image=photo1)
+    button2.config(image=photo2)
+    button3.config(image=photo3)
 
     # Zaktualizuj etykiety w oknie Tkinter z nowymi obrazami
-    label1.image = photo1
-    label2.image = photo2
-    label3.image = photo3
+    button1.image = photo1
+    button2.image = photo2
+    button3.image = photo3
 
-    if paused == False and tester_fail1 == True:
+    if marker1 == False and tester_fail1 == True:
         msgbox.warning_info1()
 
-    if paused == False and tester_fail2 == True:
+    if marker2 == False and tester_fail2 == True:
         msgbox.warning_info2()
 
-    if paused == False and tester_fail3 == True:
+    if marker3 == False and tester_fail3 == True:
         msgbox.warning_info3()
 
     window.after(60000, kolor)
 
 # Utwórz etykiety, ale bez przypisanych obrazów, które zostaną ustawione w funkcji kolor()
-label1 = tk.Label(frame_add_info)
-label1.pack()
-label1.place(x=10, y=0)
+button1 = Button(frame_add_info, command=pause1, bd=0)
+button1.pack()
+button1.place(x=10, y=0)
 
-label2 = tk.Label(frame_add_info)
-label2.pack()
-label2.place(x=150, y=0)
+button2 = Button(frame_add_info, command=pause2, bd=0)
+button2.pack()
+button2.place(x=150, y=0)
 
-label3 = tk.Label(frame_add_info)
-label3.pack()
-label3.place(x=280, y=0)
+button3 = Button(frame_add_info, command=pause3, bd=0)
+button3.pack()
+button3.place(x=280, y=0)
 
 kolor()
 
