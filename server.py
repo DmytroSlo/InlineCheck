@@ -5,7 +5,6 @@ import pytz
 
 from msgbox import bd_error
 
-
 def get_data():
     try:
         db = mc.connect("kit-grd-sql01", "FLx_read", "Kitron2017+", "FactoryLogixPLp")
@@ -133,33 +132,33 @@ def tenminutago():
         time_difference = current_time - local_time1
 
         if p0 == True and p15 == False and p21 == False:
-            time_result1 = time_difference.total_seconds() < 300
+            time_result1 = time_difference.total_seconds() < 360
         elif p0 == False and p15 == True and p21 == False:
-            time_result1 = time_difference.total_seconds() < 420
+            time_result1 = time_difference.total_seconds() < 480
         elif p0 == False and p15 == False and p21 == True:
-            time_result1 = time_difference.total_seconds() < 180
+            time_result1 = time_difference.total_seconds() < 240
     else:
         time_result1 = True
 
     if local_time2 is not None:
         time_difference = current_time - local_time2
         if p0 == True and p15 == False and p21 == False:
-            time_result2 = time_difference.total_seconds() < 300
+            time_result2 = time_difference.total_seconds() < 360
         elif p0 == False and p15 == True and p21 == False:
-            time_result2 = time_difference.total_seconds() < 420
+            time_result2 = time_difference.total_seconds() < 480
         elif p0 == False and p15 == False and p21 == True:
-            time_result2 = time_difference.total_seconds() < 180
+            time_result2 = time_difference.total_seconds() < 240
     else:
         time_result2 = True
 
     if local_time3 is not None:
         time_difference = current_time - local_time3
         if p0 == True and p15 == False and p21 == False:
-            time_result3 = time_difference.total_seconds() < 300
+            time_result3 = time_difference.total_seconds() < 360
         elif p0 == False and p15 == True and p21 == False:
-            time_result3 = time_difference.total_seconds() < 420
+            time_result3 = time_difference.total_seconds() < 480
         elif p0 == False and p15 == False and p21 == True:
-            time_result3 = time_difference.total_seconds() < 180
+            time_result3 = time_difference.total_seconds() < 240
     else:
         time_result3 = True
 
