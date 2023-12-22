@@ -59,8 +59,6 @@ def get_data():
 
         results3 = cursor.fetchall()
 
-        time_value1, time_value2, time_value3 = None, None, None
-
         for result in results:
             time_value1 = result[1]
 
@@ -71,25 +69,34 @@ def get_data():
             time_value3 = result3[1]
 
         #Inline I Time
-        time_utc = pytz.utc
-        current_time = pytz.timezone('Europe/Warsaw')
-        strefa_utc = time_utc.localize(time_value1)
-        local_time1_utc = strefa_utc.astimezone(current_time)
-        local_time1 = local_time1_utc
+        if time_value1 is not None:
+            time_utc = pytz.utc
+            current_time = pytz.timezone('Europe/Warsaw')
+            strefa_utc = time_utc.localize(time_value1)
+            local_time1_utc = strefa_utc.astimezone(current_time)
+            local_time1 = local_time1_utc
+        else:
+            local_time1 = datetime.datetime.now()
 
         #Inline II Time
-        time_utc = pytz.utc
-        current_time = pytz.timezone('Europe/Warsaw')
-        strefa_utc = time_utc.localize(time_value2)
-        local_time2_utc = strefa_utc.astimezone(current_time)
-        local_time2 = local_time2_utc
+        if time_value2 is not None:
+            time_utc = pytz.utc
+            current_time = pytz.timezone('Europe/Warsaw')
+            strefa_utc = time_utc.localize(time_value2)
+            local_time2_utc = strefa_utc.astimezone(current_time)
+            local_time2 = local_time2_utc
+        else:
+            local_time2 = datetime.datetime.now()
 
         #Inline III Time
-        time_utc = pytz.utc
-        current_time = pytz.timezone('Europe/Warsaw')
-        strefa_utc = time_utc.localize(time_value3)
-        local_time3_utc = strefa_utc.astimezone(current_time)
-        local_time3 = local_time3_utc
+        if time_value3 is not None:
+            time_utc = pytz.utc
+            current_time = pytz.timezone('Europe/Warsaw')
+            strefa_utc = time_utc.localize(time_value3)
+            local_time3_utc = strefa_utc.astimezone(current_time)
+            local_time3 = local_time3_utc
+        else:
+            local_time3 = datetime.datetime.now()
 
         cursor.close()
         db.close()
@@ -122,44 +129,26 @@ def timeP0():
     p0 = True
 
 def tenminutago():
-    local_time1, local_time2, local_time3 = get_data()
+    try:
+        local_time1, local_time2, local_time3 = get_data()
+        current_time = datetime.datetime.now(pytz.timezone('Europe/Warsaw'))
 
-    time_result1, time_result2, time_result3 = False, False, False
+        def calculate_time_result(local_time, threshold):
+            if local_time is not None:
+                if local_time.tzinfo is None:
+                    local_time = pytz.utc.localize(local_time)
 
-    current_time = datetime.datetime.now(pytz.timezone('Europe/Warsaw'))
+                time_difference = current_time - local_time
+                return time_difference.total_seconds() < threshold
+            return False
 
-    if local_time1 is not None:
-        time_difference = current_time - local_time1
 
-        if p0 == True and p15 == False and p21 == False:
-            time_result1 = time_difference.total_seconds() < 360
-        elif p0 == False and p15 == True and p21 == False:
-            time_result1 = time_difference.total_seconds() < 480
-        elif p0 == False and p15 == False and p21 == True:
-            time_result1 = time_difference.total_seconds() < 240
-    else:
-        time_result1 = True
+        time_result1 = calculate_time_result(local_time1, 480 if p0 else (600 if p15 else 360))
+        time_result2 = calculate_time_result(local_time2, 480 if p0 else (600 if p15 else 360))
+        time_result3 = calculate_time_result(local_time3, 480 if p0 else (600 if p15 else 360))
 
-    if local_time2 is not None:
-        time_difference = current_time - local_time2
-        if p0 == True and p15 == False and p21 == False:
-            time_result2 = time_difference.total_seconds() < 360
-        elif p0 == False and p15 == True and p21 == False:
-            time_result2 = time_difference.total_seconds() < 480
-        elif p0 == False and p15 == False and p21 == True:
-            time_result2 = time_difference.total_seconds() < 240
-    else:
-        time_result2 = True
+        return time_result1, time_result2, time_result3
 
-    if local_time3 is not None:
-        time_difference = current_time - local_time3
-        if p0 == True and p15 == False and p21 == False:
-            time_result3 = time_difference.total_seconds() < 360
-        elif p0 == False and p15 == True and p21 == False:
-            time_result3 = time_difference.total_seconds() < 480
-        elif p0 == False and p15 == False and p21 == True:
-            time_result3 = time_difference.total_seconds() < 240
-    else:
-        time_result3 = True
-
-    return time_result1, time_result2, time_result3
+    except mc.Error as e:
+        bd_error()
+        print(e)

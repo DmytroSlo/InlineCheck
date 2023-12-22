@@ -149,17 +149,17 @@ def pause_picture_3():
     button3.config(image=photo_pause)
     button3.image = photo_pause
 
+tester_fail1, tester_fail2, tester_fail3 = False, False, False
+
 #Pausa Inline 1
 def pause1():
     global marker1
     global tester_fail1
 
-    # time_result1 = bd.tenminutago()
-
     if button1_checked.get():
         button1_checked.set(0)
         marker1 = False
-        if tester_fail1 is True:
+        if tester_fail1 is False:
             good_picture_1()
         else:
             bad_picture_1()
@@ -178,7 +178,7 @@ def pause2():
     if button2_checked.get():
         button2_checked.set(0)
         marker2 = False
-        if tester_fail2 is True:
+        if tester_fail2 is False:
             good_picture_2()
         else:
             bad_picture_2()
@@ -197,7 +197,7 @@ def pause3():
     if button3_checked.get():
         button3_checked.set(0)
         marker3 = False
-        if tester_fail3 is True:
+        if tester_fail3 is False:
             good_picture_3()
         else:
             bad_picture_3()
@@ -208,49 +208,46 @@ def pause3():
 
 button3_checked = IntVar()
 
-tester_fail1, tester_fail2, tester_fail3 = False, False, False
-
 def kolor():
     time_result1, time_result2, time_result3 = bd.tenminutago()
-    # tester_fail1, tester_fail2, tester_fail3 = False, False, False
 
-    if marker1 == True:
+    global tester_fail1, tester_fail2, tester_fail3
+
+    if marker1 is True:
         pause_picture_1()
-
-    if time_result1 == True and marker1 == False:
+    if time_result1 is True and marker1 is False:
         good_picture_1()
-    if time_result1 == False and marker1 == False:
+        tester_fail1 = False
+    if time_result1 is False and marker1 is False:
         bad_picture_1()
         tester_fail1 = True
 
 
-    if marker2 == True:
+    if marker2 is True:
         pause_picture_2()
-
-    if time_result2 == True and marker2 == False:
+    if time_result2 is True and marker2 is False:
         good_picture_2()
-
-    if time_result2 == False and marker2 == False:
+        tester_fail2 = False
+    if time_result2 is False and marker2 is False:
         bad_picture_2()
         tester_fail2 = True
 
-    if marker3 == True:
+    if marker3 is True:
         pause_picture_3()
-
-    if time_result3 == True and marker3 == False:
+    if time_result3 is True and marker3 is False:
         good_picture_3()
-
-    if time_result3 == False and marker3 == False:
+        tester_fail3 = False
+    if time_result3 is False and marker3 is False:
         bad_picture_3()
         tester_fail3 = True
 
-    if marker1 == False and tester_fail1 == True:
+    if marker1 is False and tester_fail1 is True:
         msgbox.warning_info1()
 
-    if marker2 == False and tester_fail2 == True:
+    if marker2 is False and tester_fail2 is True:
         msgbox.warning_info2()
 
-    if marker3 == False and tester_fail3 == True:
+    if marker3 is False and tester_fail3 is True:
         msgbox.warning_info3()
 
     window.after(60000, kolor)
